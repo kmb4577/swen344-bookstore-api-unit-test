@@ -21,14 +21,13 @@ chai.use(chaiHttp);
   /*
   * Test the /POST route
   */
-  describe('/POST books', () => {
-      it('it should be denied', (done) => {
+  describe('/GET book using query', () => {
+      it('it should empty', (done) => {
         chai.request('http://vm344a.se.rit.edu:80')
             .get('/htdocs/APIsdfsdf/testapi.php?function=functionTest&param1=sdf')
             .end((err, res) => {
 		res.body.should.be.a('Object');
 		res.body.should.be.empty;
-		res.status.should.be.above(399);
               done();
             });
       });
