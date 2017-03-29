@@ -1,11 +1,15 @@
+Run the following commands to install mocha 
 
-`npm install -g mocha`
 
-`npm install`
+`npm install -g mocha`  to install mocha globally
+
+`cd /path/to/this/folder` 
+
+`npm install` 
 
 Create unit tests and save them under `test` folder
 
-`npm run test` or `mocha` to run test
+`npm run test` or `mocha` from this folder to run tests
 
 More examples at
 
