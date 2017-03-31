@@ -4,9 +4,9 @@ let chaiHttp = require('chai-http');
 let should = chai.should();
 let expect = chai.expect();
 
-let hostURL = 'http://vm344a.se.rit.edu:80';
+let hostName = 'http://vm344a.se.rit.edu:80';
 let apiFile = '/htdocs/SWEN-344-API/API/API.php';
-let baseGETString = apiFile.concat('?team=book_store&function=');
+let baseGetUrl = apiFile.concat('?team=book_store');
 
 chai.use(chaiHttp);
 
@@ -26,7 +26,7 @@ chai.use(chaiHttp);
 describe('/GET book using invalid query', () => {
       it('it should empty', (done) => {
 	let query = baseGETString.concat('getBook&isbn=34324');
-        chai.request(hostURL)
+        chai.request(hostName)
 	    .get(query)
             .end((err, res) => {
 		res.body.should.be.a('Object');
@@ -36,14 +36,26 @@ describe('/GET book using invalid query', () => {
       });
   });
 
-describe('/GET create book', () =>{
+describe('Create book using GET', () =>{
     it('it should return a 203 status code', (done)=>{
-	let query = baseGETString.concat('createBook&isbn=34324');
-        chai.request(hostURL)
-	    .get(query)
+	let getFunction = '&function=CreateBook';
+	let isbn = '&Isbn=123456890';
+	let title ='&Title=testTitle';
+	let publisherID = '&Publisher_id=1';
+	let thumbnail_url = '&Thumbnail_url=testurl';
+	let available = '&Available=0';
+	let count = '$Count=0';
+	
+	let params =  [getFunction,isbn,title,publisherID,thumbnail_url,available,count].join('');
+	let url = baseGetUrl.concat(params);
+	console.log(url);
+
+        chai.request(hostName)
+	    .get(url)
             .end((err, res) => {
-		res.body.should.be.a('Object');
+		//res.body.should.be.a('Object');
 		res.body.should.be.empty;
+		res.shouldd.have.status(203);
               done();
             });
     });
