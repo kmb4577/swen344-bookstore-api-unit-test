@@ -4,6 +4,10 @@ let chaiHttp = require('chai-http');
 let should = chai.should();
 let expect = chai.expect();
 
+let hostURL = 'http://vm344a.se.rit.edu:80';
+let apiFile = '/htdocs/SWEN-344-API/API/API.php';
+let baseGETString = apiFile.concat('?team=book_store&function=');
+
 chai.use(chaiHttp);
 
   describe('/GET books', () => {
@@ -18,13 +22,12 @@ chai.use(chaiHttp);
             });
       });
   });
-  /*
-  * Test the /POST route
-  */
-  describe('/GET book using query', () => {
+
+describe('/GET book using invalid query', () => {
       it('it should empty', (done) => {
-        chai.request('http://vm344a.se.rit.edu:80')
-            .get('/htdocs/APIsdfsdf/testapi.php?function=functionTest&param1=sdf')
+	let query = baseGETString.concat('getBook&isbn=34324');
+        chai.request(hostURL)
+	    .get(query)
             .end((err, res) => {
 		res.body.should.be.a('Object');
 		res.body.should.be.empty;
@@ -32,3 +35,16 @@ chai.use(chaiHttp);
             });
       });
   });
+
+describe('/GET create book', () =>{
+    it('it should return a 203 status code', (done)=>{
+	let query = baseGETString.concat('createBook&isbn=34324');
+        chai.request(hostURL)
+	    .get(query)
+            .end((err, res) => {
+		res.body.should.be.a('Object');
+		res.body.should.be.empty;
+              done();
+            });
+    });
+});
