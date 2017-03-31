@@ -23,21 +23,50 @@ chai.use(chaiHttp);
       });
   });
 
-describe('/GET book using invalid query', () => {
+describe('/GET book using invalid param isb instead of isbn ', () => {
       it('it should empty', (done) => {
-	let query = baseGETString.concat('getBook&isbn=34324');
+	let query = baseGetUrl.concat('getBook&isb=123456789');
+	console.log(query);
         chai.request(hostName)
 	    .get(query)
             .end((err, res) => {
-		res.body.should.be.a('Object');
 		res.body.should.be.empty;
+		res.should.have.status(400);
+              done();
+            });
+      });
+  });
+describe('/GET book using negative isbn', () => {
+      it('it should return status code of 400 Bad Request', (done) => {
+	let query = baseGetUrl.concat('getBook&isbn=-1234556789');
+	console.log(query);
+        chai.request(hostName)
+	    .get(query)
+            .end((err, res) => {
+	//	res.body.should.be.a('Object');
+		res.body.should.be.empty;
+		res.should.have.status(400);
+              done();
+            });
+      });
+  });
+describe('/GET book using negative isbn', () => {
+      it('it should return status code of 400 Bad Request', (done) => {
+	let query = baseGetUrl.concat('getBook&isbn=1234556789');
+	console.log(query);
+        chai.request(hostName)
+	    .get(query)
+            .end((err, res) => {
+	//	res.body.should.be.a('Object');
+		res.body.should.be.empty;
+		res.should.have.status(400);
               done();
             });
       });
   });
 
 describe('Create book using GET', () =>{
-    it('it should return a 203 status code', (done)=>{
+    it('it should return status code 400', (done)=>{
 	let getFunction = '&function=CreateBook';
 	let isbn = '&Isbn=123456890';
 	let title ='&Title=testTitle';
@@ -54,9 +83,102 @@ describe('Create book using GET', () =>{
 	    .get(url)
             .end((err, res) => {
 		//res.body.should.be.a('Object');
-		res.body.should.be.empty;
-		res.shouldd.have.status(203);
+		//res.body.should.be.empty;
+		res.should.have.status(400);
               done();
             });
     });
 });
+describe('Create book using POST', () =>{
+    it('it should return a 203 status code', (done)=>{
+	let getFunction = '&function=CreateBook';
+	let isbn = '&Isbn=123456890';
+	let title ='&Title=testTitle';
+	let publisherID = '&Publisher_id=1';
+	let thumbnail_url = '&Thumbnail_url=testurl';
+	let available = '&Available=0';
+	let count = '$Count=0';
+	
+	let params =  [getFunction,isbn,title,publisherID,thumbnail_url,available,count].join('');
+	let url = baseGetUrl.concat(params);
+	console.log(url);
+
+        chai.request(hostName)
+	    .post(url)
+            .end((err, res) => {
+		//res.body.should.be.a('Object');
+		//res.body.should.be.empty;
+		res.should.have.status(203);
+              done();
+            });
+    });
+});
+
+describe('Create book using GET with negative isbn', () =>{
+      it('it should return status code of 400 Bad Request', (done) => {
+	let getFunction = '&function=CreateBook';
+	let isbn = '&Isbn=-123456890';
+	let title ='&Title=testTitle';
+	let publisherID = '&Publisher_id=1';
+	let thumbnail_url = '&Thumbnail_url=testurl';
+	let available = '&Available=0';
+	let count = '$Count=0';
+	
+	let params =  [getFunction,isbn,title,publisherID,thumbnail_url,available,count].join('');
+	let url = baseGetUrl.concat(params);
+	console.log(url);
+
+        chai.request(hostName)
+	    .get(url)
+            .end((err, res) => {
+		//res.body.should.be.a('Object');
+		res.should.have.status(400);
+              done();
+            });
+    });
+});
+
+describe('/GET book reviews data type', () => {
+      it('it should return an array', (done) => {
+	let query = baseGetUrl.concat('viewBookReviews&isbn=123456789');
+	console.log(query);
+        chai.request(hostName)
+	    .get(query)
+            .end((err, res) => {
+		res.body.should.be.a('array');
+              done();
+            });
+      });
+  });
+describe('/GET book reviews status code', () => {
+      it('it should return status code of 200', (done) => {
+	let query = baseGetUrl.concat('viewBookReviews&isb=123456789');
+	console.log(query);
+        chai.request(hostName)
+	    .get(query)
+            .end((err, res) => {
+		res.should.have.status(200);
+		//res.body.should.be.a('array');
+
+              done();
+            });
+      });
+  });
+
+
+describe('/Create book reviews using GET', () => {
+      it('it should return status code of 400', (done) => {
+	let query = baseGetUrl.concat('viewBookReviews&isb=123456789');
+	console.log(query);
+        chai.request(hostName)
+	    .get(query)
+            .end((err, res) => {
+		res.should.have.status(200);
+		//res.body.should.be.a('array');
+
+              done();
+            });
+      });
+  });
+
+
