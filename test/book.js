@@ -181,4 +181,31 @@ describe('/Create book reviews using GET', () => {
       });
   });
 
+//TODO: Check the following tests======================
+  describe('/GET section_books', () => {
+      it('it should GET all the books in the section', (done) => {
+        chai.request('http://vm344a.se.rit.edu:80')
+            .get('/api/section/books')
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('array');
+                res.body.length.should.not.be.eql(0);
+              done();
+            });
+      });
+  });
+
+  //calls: function findOrCreatePublisher
+  describe('/GET publisher_id', () => {
+      it('it should GET all the books in the section', (done) => {
+            //TODO
+      });
+  });
+
+  //toggleBook
+  //orderBook
+  //findOrCreateAuthor
+  //viewBookReviews
+  //updateBook
+  //searchBooks
 
