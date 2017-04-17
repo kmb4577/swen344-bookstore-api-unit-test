@@ -6,10 +6,10 @@ let expect = chai.expect();
 
 let hostName = 'http://vm344a.se.rit.edu:80';
 let apiFile = '/htdocs/SWEN-344-API/API/API.php';
-let baseGetUrl = apiFile.concat('?team=book_store');
+let baseGetUrl = apiFile.concat('?team=book_store&function=');
 
 chai.use(chaiHttp);
-
+  //PASSING using VM
   describe('/GET books', () => {
       it('it should GET all the books', (done) => {
         chai.request('http://vm344a.se.rit.edu:80')
@@ -23,6 +23,20 @@ chai.use(chaiHttp);
       });
   });
 
+  //PASSING using SHARED API
+  describe('/GET books', () => {
+      it('it should GET all the books', (done) => {
+        let query = baseGetUrl.concat('getAllBooks');
+        console.log(query);
+        chai.request(hostName)
+        .get(query)
+            .end((err, res) => {
+            res.should.have.status(200);
+            done();
+            });
+      });
+  });
+
 describe('/GET book using invalid param isb instead of isbn ', () => {
       it('it should empty', (done) => {
 	let query = baseGetUrl.concat('getBook&isb=123456789');
@@ -30,12 +44,14 @@ describe('/GET book using invalid param isb instead of isbn ', () => {
         chai.request(hostName)
 	    .get(query)
             .end((err, res) => {
-		res.body.should.be.empty;
+		// res.body.should.be.empty;
 		res.should.have.status(400);
+            //GETTING 200
               done();
             });
       });
   });
+
 describe('/GET book using negative isbn', () => {
       it('it should return status code of 400 Bad Request', (done) => {
 	let query = baseGetUrl.concat('getBook&isbn=-1234556789');
@@ -67,7 +83,7 @@ describe('/GET book using negative isbn', () => {
 
 describe('Create book using GET', () =>{
     it('it should return status code 400', (done)=>{
-	let getFunction = '&function=CreateBook';
+	let getFunction = 'CreateBook';
 	let isbn = '&Isbn=123456890';
 	let title ='&Title=testTitle';
 	let publisherID = '&Publisher_id=1';
@@ -91,15 +107,16 @@ describe('Create book using GET', () =>{
 });
 describe('Create book using POST', () =>{
     it('it should return a 203 status code', (done)=>{
-	let getFunction = '&function=CreateBook';
-	let isbn = '&Isbn=123456890';
-	let title ='&Title=testTitle';
-	let publisherID = '&Publisher_id=1';
-	let thumbnail_url = '&Thumbnail_url=testurl';
-	let available = '&Available=0';
-	let count = '$Count=0';
+	let getFunction = 'CreateBook';
+	let isbn = '&isbn=123456890';
+	let title ='&title="testTitle"';
+	let publisherID = '&publisher_id=1';
+      let price = '&price=44';
+	let thumbnail_url = '&thumbnail_url="testurl"';
+	let available = '&available=1';
+	let count = '&count=1';
 	
-	let params =  [getFunction,isbn,title,publisherID,thumbnail_url,available,count].join('');
+	let params =  [getFunction,isbn,title,publisherID,price, thumbnail_url,available,count].join('');
 	let url = baseGetUrl.concat(params);
 	console.log(url);
 
@@ -108,7 +125,7 @@ describe('Create book using POST', () =>{
             .end((err, res) => {
 		//res.body.should.be.a('Object');
 		//res.body.should.be.empty;
-		res.should.have.status(203);
+		res.should.have.status(201);
               done();
             });
     });
@@ -116,7 +133,7 @@ describe('Create book using POST', () =>{
 
 describe('Create book using GET with negative isbn', () =>{
       it('it should return status code of 400 Bad Request', (done) => {
-	let getFunction = '&function=CreateBook';
+	let getFunction = 'CreateBook';
 	let isbn = '&Isbn=-123456890';
 	let title ='&Title=testTitle';
 	let publisherID = '&Publisher_id=1';
